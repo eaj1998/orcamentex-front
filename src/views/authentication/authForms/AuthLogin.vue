@@ -1,33 +1,70 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import Google from '@/assets/images/auth/social-google.svg';
-import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
+import axiosIns from '@/plugins/axios';
+import { router } from '@/router';
+import type { SnackbarItem } from '@/types/structure';
+
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const checkbox = ref(false);
 const valid = ref(false);
 const show1 = ref(false);
 //const logform = ref();
-const password = ref('admin123');
-const username = ref('info@codedthemes.com');
+
+const form = ref({
+  email: '',
+  password: '',
+})
+
 const passwordRules = ref([
   (v: string) => !!v || 'Password is required',
   (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
 ]);
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
 
+
+const snackbarList = ref([]);
+
+const pushSnackbar = (item: SnackbarItem) => {
+  snackbarList.value.push({
+    isVisible: true,
+    type: item.type,
+    message: item.message,
+  })
+}
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function validate(values: any, { setErrors }: any) {
-  const authStore = useAuthStore();
-  return authStore.login(username.value, password.value).catch((error) => setErrors({ apiError: error }));
+function login() {
+  axiosIns
+      .post(`${baseUrl}/auth/login`, form.value)
+      .then((res) => {
+        const response = res.data
+        
+        localStorage.setItem('accessToken',response.data.token);
+        router.push('/dashboard/default');
+
+      })
+      .catch((err) => {
+        const response = err.response.data
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
+      });
 }
 </script>
 
 <template>
   <h5 class="text-h5 text-center my-4 mb-8">Sign in with Email address</h5>
-  <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
+  <Form @submit="login" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
     <v-text-field
-      v-model="username"
+      v-model="form.email"
       :rules="emailRules"
       label="Email Address / Username"
       class="mt-4 mb-8"
@@ -38,7 +75,7 @@ function validate(values: any, { setErrors }: any) {
       color="primary"
     ></v-text-field>
     <v-text-field
-      v-model="password"
+      v-model="form.password"
       :rules="passwordRules"
       label="Password"
       required
@@ -69,6 +106,20 @@ function validate(values: any, { setErrors }: any) {
     <v-btn color="secondary" :loading="isSubmitting" block class="mt-2" variant="flat" size="large" :disabled="valid" type="submit">
       Sign In</v-btn
     >
+    <VSnackbar
+    v-for="(item, index) in snackbarList"
+    :key="`snack-${index}`"
+
+    v-model="item.isVisible"
+    location="bottom center"
+    :color="item.type"
+
+    close-on-content-click
+
+    :class="(index < (snackbarList.length - 1)) ? 'secondary-snackbar' : ''"
+  >
+    {{ item.message }}
+  </VSnackbar>
     <div v-if="errors.apiError" class="mt-2">
       <v-alert color="error">{{ errors.apiError }}</v-alert>
     </div>

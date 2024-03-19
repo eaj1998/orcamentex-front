@@ -4,11 +4,11 @@ import {
   TypographyIcon,
   ShadowIcon,
   PaletteIcon,
-  KeyIcon,
   BugIcon,
   DashboardIcon,
   BrandChromeIcon,
-  HelpIcon
+  HelpIcon,
+  PackageIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -35,47 +35,23 @@ const sidebarItem: menu[] = [
     to: '/dashboard/default'
   },
   { divider: true },
-  { header: 'Pages' },
   {
-    title: 'Authentication',
-    icon: KeyIcon,
-    to: '/auth',
+    title: 'Produto',
+    icon: PackageIcon,
+    to: '/product',
     children: [
       {
-        title: 'Login',
+        title: 'Criar',
         icon: CircleIcon,
-        to: '/auth/login'
+        to: '/product/create'
       },
       {
-        title: 'Register',
+        title: 'Listar',
         icon: CircleIcon,
-        to: '/auth/register'
+        to: '/product/list'
       }
     ]
   },
-  {
-    title: 'Error 404',
-    icon: BugIcon,
-    to: '/pages/error'
-  },
-  { divider: true },
-  { header: 'Utilities' },
-  {
-    title: 'Typography',
-    icon: TypographyIcon,
-    to: '/utils/typography'
-  },
-  {
-    title: 'Shadows',
-    icon: ShadowIcon,
-    to: '/utils/shadows'
-  },
-  {
-    title: 'Colors',
-    icon: PaletteIcon,
-    to: '/utils/colors'
-  },
-
   {
     title: 'Icons',
     icon: WindmillIcon,
@@ -92,18 +68,6 @@ const sidebarItem: menu[] = [
         to: '/icons/material'
       }
     ]
-  },
-  { divider: true },
-  {
-    title: 'Sample Page',
-    icon: BrandChromeIcon,
-    to: '/starter'
-  },
-  {
-    title: 'Documentation',
-    icon: HelpIcon,
-    to: 'https://codedthemes.gitbook.io/berry-vuetify/',
-    type: 'external'
   }
 ];
 
