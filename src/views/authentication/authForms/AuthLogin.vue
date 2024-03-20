@@ -43,7 +43,7 @@ function login() {
         const response = res.data
         
         localStorage.setItem('accessToken',response.data.token);
-        router.push('/dashboard/default');
+        router.push('/');
 
       })
       .catch((err) => {

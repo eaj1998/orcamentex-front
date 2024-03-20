@@ -5,8 +5,20 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 
 import axiosIns from '@/plugins/axios';
+import type { SnackbarItem } from '@/types/structure';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
+
+const snackbarList = ref([]);
+
+const pushSnackbar = (item: SnackbarItem) => {
+  snackbarList.value.push({
+    isVisible: true,
+    type: item.type,
+    message: item.message,
+  })
+}
+
 
 onMounted(async () => {
   await fetchProducts()
@@ -43,14 +55,14 @@ async function fetchProducts () {
       })
       .catch((err) => {
         const response = err.response.data
-        // if(response.message){
-          // pushSnackbar({ type: 'error', message: response.message })
-        // }
-        // if(response.data) {
-        //   response.data.map((erro: any) => {
-        //     pushSnackbar({ type: 'error', message: erro.msg })
-        //   })
-        // }
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
       });
 }
 
@@ -69,6 +81,8 @@ function deleteItemConfirm(){
       .then((res) => {
         const response = res.data
         fetchProducts();
+        pushSnackbar({ type: 'success', message: 'Produto deletado com sucesso!' })
+
       })
       .catch((err) => {
         const response = err.response.data
@@ -98,6 +112,20 @@ function deleteItem(item: any) {
 <template>
     <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-row>
+    <VSnackbar
+        v-for="(item, index) in snackbarList"
+        :key="`snack-${index}`"
+
+        v-model="item.isVisible"
+        location="bottom center"
+        :color="item.type"
+
+        close-on-content-click
+
+        :class="(index < (snackbarList.length - 1)) ? 'secondary-snackbar' : ''"
+    >
+        {{ item.message }}
+    </VSnackbar>
     <v-col cols="12" md="12">
       <UiParentCard title="Lista">
         <v-data-table
