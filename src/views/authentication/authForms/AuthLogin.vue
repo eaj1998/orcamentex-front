@@ -43,7 +43,10 @@ function login() {
         const response = res.data
         
         localStorage.setItem('accessToken',response.data.token);
-        router.push('/');
+        localStorage.setItem('firstName', response.data.firstName);
+        localStorage.setItem('lastName', response.data.lastName);
+        
+        router.push({path: '/home'});
 
       })
       .catch((err) => {
@@ -61,7 +64,6 @@ function login() {
 </script>
 
 <template>
-  <h5 class="text-h5 text-center my-4 mb-8">Sign in with Email address</h5>
   <Form @submit="login" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
     <v-text-field
       v-model="form.email"
@@ -90,7 +92,7 @@ function login() {
     ></v-text-field>
 
     <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
-      <v-checkbox
+      <!-- <v-checkbox
         v-model="checkbox"
         :rules="[(v: any) => !!v || 'You must agree to continue!']"
         label="Remember me?"
@@ -98,7 +100,7 @@ function login() {
         color="primary"
         class="ms-n2"
         hide-details
-      ></v-checkbox>
+      ></v-checkbox> -->
       <div class="ml-auto">
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Forgot password?</a>
       </div>

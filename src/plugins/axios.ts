@@ -13,7 +13,7 @@ const axiosIns = axios.create({
 axiosIns.interceptors.request.use(config => {
   // Retrieve token from localStorage
   const token = localStorage.getItem('accessToken')
-
+  
   // If token is found
   if (token) {
     // Get request headers and if headers is undefined assign blank object

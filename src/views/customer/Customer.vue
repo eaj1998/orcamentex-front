@@ -22,38 +22,43 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 
 onMounted(async () => {
-  await fetchProducts()
+  await fetchCustomers()
 })
 
 interface State {
-  products: any | null,
+  customers: any | null,
   isDialogDeleteVisible: boolean,
   deleteProduct: any,
   search: any
 }
 
 const state: State = reactive({
-  products: null,
+  customers: null,
   isDialogDeleteVisible: false,
   deleteProduct: null,
   search: ''
 })
 
-const page = ref({ title: 'Produto' });
+const page = ref({ title: 'Cliente' });
 
 const breadcrumbs = shallowRef([
   {
-    title: 'Product',
+    title: 'Cliente',
+    disabled: true,
+    href: '#'
+  },
+  {
+    title: 'Lista',
     disabled: true,
     href: '#'
   }
 ]);
-async function fetchProducts () {
+async function fetchCustomers () {
   axiosIns
-      .get(`${baseUrl}/product`)
+      .get(`${baseUrl}/customer`)
       .then((res) => {
         const response = res.data
-        state.products = response.data;
+        state.customers = response.data;
         
       })
       .catch((err) => {
@@ -70,9 +75,8 @@ async function fetchProducts () {
 }
 
 const headers = ref([
-  {title: 'Codigo', key: 'code'},
   {title: 'Nome', key: 'name'},
-  {title: 'Valor', key: 'valor'},
+  {title: 'Telefone', key: 'phone'},
   {title: 'Criado', key: 'createdAt'},
   {title: 'Ações', key: 'actions'},
 ])
@@ -81,23 +85,23 @@ function deleteItemConfirm(){
   state.isDialogDeleteVisible = false;
   if(state.deleteProduct){
     axiosIns
-      .delete(`${baseUrl}/product/${state.deleteProduct._id}`)
+      .delete(`${baseUrl}/customer/${state.deleteProduct._id}`)
       .then((res) => {
         const response = res.data
-        fetchProducts();
-        pushSnackbar({ type: 'success', message: 'Produto deletado com sucesso!' })
+        fetchCustomers();
+        pushSnackbar({ type: 'success', message: 'Cliente deletado com sucesso!' })
 
       })
       .catch((err) => {
         const response = err.response.data
-        // if(response.message){
-          // pushSnackbar({ type: 'error', message: response.message })
-        // }
-        // if(response.data) {
-        //   response.data.map((erro: any) => {
-        //     pushSnackbar({ type: 'error', message: erro.msg })
-        //   })
-        // }
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
       });
   }
 }
@@ -112,7 +116,7 @@ function deleteItem(item: any) {
 }
 
 function editItem (item: any) {
-  router.push({path: `/product/edit/${item._id}`});
+  router.push({path: `/customer/edit/${item._id}`});
 }
 
 </script>
@@ -138,9 +142,9 @@ function editItem (item: any) {
       <UiParentCard title="Lista">
         <v-data-table
           :headers="headers"
-          :items="state.products"
+          :items="state.customers"
           :sort-by="[{ key: 'createdAt', order: 'desc' }]"
-          v-if="state.products"
+          v-if="state.customers"
           :search="state.search"
         >
           <template v-slot:top>
@@ -156,7 +160,7 @@ function editItem (item: any) {
               <v-dialog  :model-value="state.isDialogDeleteVisible"
         max-width="500px">
                 <v-card>
-                  <v-card-title class="text-h5">Tem certeza que deseja deletar este produto?</v-card-title>
+                  <v-card-title class="text-h5">Tem certeza que deseja deletar este cliente?</v-card-title>
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>

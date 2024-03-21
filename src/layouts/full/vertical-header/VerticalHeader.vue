@@ -42,7 +42,7 @@ function searchbox() {
     </v-btn>
 
     <!-- search mobile -->
-    <v-btn
+    <!-- <v-btn
       class="hidden-lg-and-up text-secondary ml-3"
       color="lightsecondary"
       icon
@@ -56,14 +56,14 @@ function searchbox() {
 
     <v-sheet v-if="showSearch" class="search-sheet v-col-12">
       <Searchbar :closesearch="searchbox" />
-    </v-sheet>
+    </v-sheet> -->
 
     <!-- ---------------------------------------------- -->
     <!-- Search part -->
     <!-- ---------------------------------------------- -->
-    <v-sheet class="mx-3 v-col-3 v-col-xl-2 v-col-lg-4 d-none d-lg-block">
+    <!-- <v-sheet class="mx-3 v-col-3 v-col-xl-2 v-col-lg-4 d-none d-lg-block">
       <Searchbar />
-    </v-sheet>
+    </v-sheet> -->
 
     <!---/Search part -->
 
@@ -93,7 +93,11 @@ function searchbox() {
       <template v-slot:activator="{ props }">
         <v-btn class="profileBtn text-primary" color="lightprimary" variant="flat" rounded="pill" v-bind="props">
           <v-avatar size="30" class="mr-2 py-2">
-            <img src="@/assets/images/profile/user-round.svg" alt="Julia" />
+            <v-icon aria-hidden="false"
+            size="25"
+            >
+              mdi-account
+            </v-icon>
           </v-avatar>
           <SettingsIcon stroke-width="1.5" />
         </v-btn>

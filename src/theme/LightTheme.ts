@@ -8,8 +8,8 @@ const PurpleTheme: ThemeTypes = {
     'carousel-control-size': 10
   },
   colors: {
-    primary: '#1e88e5',
-    secondary: '#5e35b1',
+    primary: '#A80000',
+    secondary: '#A80000',
     info: '#03c9d7',
     success: '#00c853',
     accent: '#FFAB91',

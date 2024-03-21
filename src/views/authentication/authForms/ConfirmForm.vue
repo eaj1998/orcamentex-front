@@ -6,18 +6,11 @@ import { router } from '@/router';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
-const show1 = ref(false);
 const Regform = ref();
 const form = ref({
-  firstName: '',
-  lastName: '',
   email: '',
-  password: ''
+  otp: '',
 })
-const passwordRules = ref([
-  (v: string) => !!v || 'Password is required',
-  (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
-]);
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
 
 const snackbarList = ref([]);
@@ -32,11 +25,11 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 function create() {
   axiosIns
-      .post(`${baseUrl}/auth/register`, form.value)
+      .post(`${baseUrl}/auth/verify-otp`, form.value)
       .then((res) => {
         const response = res.data
         if(response.status == 1){ 
-          router.push({path: '/auth/confirm-otp'});
+          router.push({path:'/home'});
         }
       })
       .catch((err) => {
@@ -54,30 +47,7 @@ function create() {
 </script>
 
 <template>
-  <h5 class="text-h5 text-center my-4 mb-8">Entre com seu Email</h5>
-  <v-form ref="Regform" lazy-validation action="/dashboards/analytical" class="mt-7 loginForm">
-    <v-row>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="form.firstName"
-          density="comfortable"
-          hide-details="auto"
-          variant="outlined"
-          color="primary"
-          label="Firstname"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="form.lastName"
-          density="comfortable"
-          hide-details="auto"
-          variant="outlined"
-          color="primary"
-          label="Lastname"
-        ></v-text-field>
-      </v-col>
-    </v-row>
+  <v-form ref="Regform" lazy-validation  class="mt-7 loginForm">
     <v-text-field
       v-model="form.email"
       :rules="emailRules"
@@ -90,17 +60,13 @@ function create() {
       color="primary"
     ></v-text-field>
     <v-text-field
-      v-model="form.password"
-      :rules="passwordRules"
-      label="Password"
+      v-model="form.otp"
+      label="OTP"
       required
       density="comfortable"
       variant="outlined"
       color="primary"
       hide-details="auto"
-      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-      :type="show1 ? 'text' : 'password'"
-      @click:append="show1 = !show1"
       class="pwdInput"
     ></v-text-field>
     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="create()">Sign Up</v-btn>

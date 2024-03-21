@@ -1,14 +1,9 @@
 import {
   CircleIcon,
   WindmillIcon,
-  TypographyIcon,
-  ShadowIcon,
-  PaletteIcon,
-  BugIcon,
-  DashboardIcon,
-  BrandChromeIcon,
-  HelpIcon,
-  PackageIcon
+  PackageIcon,
+  Home2Icon,
+  UserIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -30,9 +25,9 @@ export interface menu {
 const sidebarItem: menu[] = [
   { header: 'Dashboard' },
   {
-    title: 'Default',
-    icon: DashboardIcon,
-    to: '/dashboard/default'
+    title: 'Home',
+    icon: Home2Icon,
+    to: '/home'
   },
   { divider: true },
   {
@@ -41,7 +36,7 @@ const sidebarItem: menu[] = [
     to: '/product',
     children: [
       {
-        title: 'Criar',
+        title: 'Cadastrar',
         icon: CircleIcon,
         to: '/product/create'
       },
@@ -49,6 +44,23 @@ const sidebarItem: menu[] = [
         title: 'Listar',
         icon: CircleIcon,
         to: '/product/list'
+      }
+    ]
+  },
+  {
+    title: 'Cliente',
+    icon: UserIcon,
+    to: '/customer',
+    children: [
+      {
+        title: 'Cadastrar',
+        icon: CircleIcon,
+        to: '/customer/create'
+      },
+      {
+        title: 'Listar',
+        icon: CircleIcon,
+        to: '/customer/list'
       }
     ]
   },

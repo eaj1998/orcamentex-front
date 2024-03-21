@@ -7,19 +7,14 @@ const MainRoutes = {
   component: () => import('@/layouts/full/FullLayout.vue'),
   children: [
     {
-      name: 'LandingPage',
+      name: 'Home',
       path: '/',
-      component: () => import('@/views/dashboards/default/DefaultDashboard.vue')
+      component: () => import('@/views/home/Home.vue')
     },
     {
       name: 'Default',
-      path: '/dashboard/default',
-      component: () => import('@/views/dashboards/default/DefaultDashboard.vue')
-    },
-    {
-      name: 'Starter',
-      path: '/starter',
-      component: () => import('@/views/StarterPage.vue')
+      path: '/home',
+      component: () => import('@/views/home/Home.vue')
     },
     {
       name: 'Tabler Icons',

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Logo from '@/layouts/full/logo/LogoDark.vue';
-import AuthRegister from '../authForms/AuthRegister.vue';
-import LogoLight from '@/layouts/full/logo/LogoLight.vue';
+import ConfirmForm from '../authForms/ConfirmForm.vue';
 </script>
 
 <template>
@@ -18,14 +17,15 @@ import LogoLight from '@/layouts/full/logo/LogoLight.vue';
                     <!---Left Part Logo -->
                     <v-row>
                       <v-col cols="12" class="text-center">
-                        <LogoLight />
-                        <h4 class="text-disabled text-h4 mt-3">Enter credentials to continue</h4>
+                        <Logo />
+                        <h2 class="text-secondary text-h2 mt-8">Bem vindo!</h2>
+                        <h4 class="text-disabled text-h4 mt-3">Confirme seu cadastro</h4>
                       </v-col>
                     </v-row>
                     <!---Left Part Logo -->
 
                     <!---Left Part Form-->
-                    <AuthRegister />
+                    <ConfirmForm />
                     <!---Left Part Form-->
                   </v-card-text>
                 </v-card>

@@ -11,6 +11,8 @@ export const useAuthStore = defineStore({
     /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
     // @ts-ignore
     accessToken: localStorage.getItem('accessToken'),
+    firstName: localStorage.getItem('firstName'),
+    lastName: localStorage.getItem('lastName'),
     returnUrl: null
   }),
   actions: {
@@ -21,7 +23,7 @@ export const useAuthStore = defineStore({
         const response = res.data
         this.accessToken = response.data.token;
         localStorage.setItem('accessToken', response.data.token);
-        router.push('/dashboard/default');
+        router.push({path: 'home'});
 
       })
       .catch((error) => {
@@ -31,7 +33,7 @@ export const useAuthStore = defineStore({
     },
     logout() {
       localStorage.removeItem('accessToken');
-      router.push('/auth/login');
+      router.push({path: '/auth/login'});
     }
   }
 });

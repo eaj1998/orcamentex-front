@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import ProductRoutes from './ProductRoutes';
+import CustomerRoutes from './CustomerRoutes';
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,8 @@ export const router = createRouter({
     },
     MainRoutes,
     AuthRoutes,
-    ProductRoutes
+    ProductRoutes,
+    CustomerRoutes
   ]
 });
 

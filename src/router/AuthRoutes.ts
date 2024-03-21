@@ -16,6 +16,11 @@ const AuthRoutes = {
       component: () => import('@/views/authentication/auth/RegisterPage.vue')
     },
     {
+      name: 'Confirm',
+      path: '/auth/confirm-otp',
+      component: () => import('@/views/authentication/auth/ConfirmPage.vue')
+    },    
+    {
       name: 'Error 404',
       path: '/pages/error',
       component: () => import('@/views/pages/maintenance/error/Error404Page.vue')

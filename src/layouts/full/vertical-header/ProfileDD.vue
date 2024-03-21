@@ -13,11 +13,11 @@ const authStore = useAuthStore();
   <!-- profile DD -->
   <!-- ---------------------------------------------- -->
   <div class="pa-4">
-    <h4 class="mb-n1">Good Morning, <span class="font-weight-regular">John Doe</span></h4>
-    <span class="text-subtitle-2 text-medium-emphasis">Project admin</span>
+    <h4 class="mb-b2">Olá, <span class="font-weight-regular">{{ authStore.firstName }} {{ authStore.lastName }}</span></h4>
+    <span class="text-subtitle-2 text-medium-emphasis pb-10"></span>
 
     <v-divider></v-divider>
-    <perfect-scrollbar style="height: calc(50vh - 300px); max-height: 515px">     
+    <perfect-scrollbar style="height: calc(30vh - 300px); max-height: 515px">     
       <v-list class="mt-3">
         <!-- <v-list-item color="secondary" rounded="md">
           <template v-slot:prepend>

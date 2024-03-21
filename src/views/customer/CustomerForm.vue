@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef } from 'vue';
 import axiosIns from '@/plugins/axios';
-import { router } from '@/router';
-
-import { format, unformat } from 'v-money3';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
@@ -14,27 +11,6 @@ const route = useRoute()
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
-const config = {
-    debug: false,
-    masked: false,
-    prefix: '',
-    suffix: '',
-    thousands: '.',
-    decimal: '.',
-    precision: 2,
-    disableNegative: false,
-    disabled: false,
-    min: null,
-    max: null,
-    allowBlank: false,
-    minimumNumberOfCharacters: 0,
-    modelModifiers: {
-        number: false,
-    },
-    shouldRound: true,
-    focusOnRight: false,
-}
-
 onMounted(async () => {
   if(route.params.id){
     fetchProduct()
@@ -43,11 +19,12 @@ onMounted(async () => {
 
 function fetchProduct() {
   axiosIns
-      .get(`${baseUrl}/product/${route.params.id}`)
+      .get(`${baseUrl}/customer/${route.params.id}`)
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
-        form.value.valor = response.data.valor
+        form.value.phone = response.data.phone
+        form.value.email = response.data.email
       })
       .catch((err) => {
         const response = err.response.data
@@ -61,7 +38,6 @@ function fetchProduct() {
         }
       });
 }
-
 const snackbarList = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
@@ -74,21 +50,15 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 const form = ref({
   name: '',
-  valor: '',
+  phone: '',
+  email: ''
 })
 
-
-function maskValor () {
   
-  form.value.valor = format(form.value.valor, config);
-  
-  }
-
-  
-const page = ref({ title: 'Produto' });
+const page = ref({ title: 'Cliente' });
 const breadcrumbs = shallowRef([
   {
-    title: 'Produto',
+    title: 'Cliente',
     disabled: true,
     href: '#'
   }
@@ -97,12 +67,15 @@ const breadcrumbs = shallowRef([
 function saveProduct() {
   if(route.params.id){
     axiosIns
-      .put(`${baseUrl}/product/${route.params.id}`, form.value)
+      .put(`${baseUrl}/customer/${route.params.id}`, form.value)
       .then((res) => {
         const response = res.data
+
         form.value.name = response.data.name
-        form.value.valor = response.data.valor
-        pushSnackbar({ type: 'success', message: 'Produto alterado com sucesso!' })
+        form.value.phone = response.data.phone
+        form.value.email = response.data.email
+
+        pushSnackbar({ type: 'success', message: 'Cliente alterado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
@@ -117,12 +90,14 @@ function saveProduct() {
       });
   } else {
     axiosIns
-      .post(`${baseUrl}/product`, form.value)
+      .post(`${baseUrl}/customer`, form.value)
       .then((res) => {
-        const response = res.data
+
         form.value.name = ''
-        form.value.valor = ''
-        pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
+        form.value.phone = ''
+        form.value.email = ''
+        if(res.data.status === 1)
+          pushSnackbar({ type: 'success', message: 'Cliente adicionado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
@@ -158,14 +133,22 @@ function saveProduct() {
                     color="primary"
                     ></v-text-field>
                     <v-text-field
-                    v-model="form.valor"
-                    label="Valor"
+                    v-model="form.phone"
+                    label="Telefone"
                     class="mt-4 mb-8"
                     density="comfortable"
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
-                    @change="maskValor"
+                    ></v-text-field>
+                    <v-text-field
+                    v-model="form.email"
+                    label="E-mail"
+                    class="mt-4 mb-8"
+                    density="comfortable"
+                    hide-details="auto"
+                    variant="outlined"
+                    color="primary"
                     ></v-text-field>
                     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
                     Salvar</v-btn
