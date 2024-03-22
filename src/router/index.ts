@@ -3,6 +3,7 @@ import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import ProductRoutes from './ProductRoutes';
 import CustomerRoutes from './CustomerRoutes';
+import OrderRoutes from './OrderRoutes';
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,7 +15,8 @@ export const router = createRouter({
     MainRoutes,
     AuthRoutes,
     ProductRoutes,
-    CustomerRoutes
+    CustomerRoutes,
+    OrderRoutes
   ]
 });
 
@@ -23,8 +25,9 @@ router.beforeEach(async (to, from, next) => {
   const publicPages = ['/auth/login'];
   const authRequired = !publicPages.includes(to.path);
   const accessToken = localStorage.getItem('accessToken');
-
+  
   if (to.matched.some((record) => record.meta.requiresAuth)) {
+    
     if (authRequired && !accessToken) {
       return next('/auth/login');
     } else next();

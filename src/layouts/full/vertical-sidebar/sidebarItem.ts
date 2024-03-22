@@ -3,7 +3,8 @@ import {
   WindmillIcon,
   PackageIcon,
   Home2Icon,
-  UserIcon
+  UserIcon,
+  ShoppingCartIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -65,22 +66,39 @@ const sidebarItem: menu[] = [
     ]
   },
   {
-    title: 'Icons',
-    icon: WindmillIcon,
-    to: '/forms/radio',
+    title: 'Orçamento',
+    icon: ShoppingCartIcon,
+    to: '/order',
     children: [
       {
-        title: 'Tabler Icons',
+        title: 'Novo Orçamento',
         icon: CircleIcon,
-        to: '/icons/tabler'
+        to: '/order/create'
       },
       {
-        title: 'Material Icons',
+        title: 'Listar',
         icon: CircleIcon,
-        to: '/icons/material'
+        to: '/order/list'
       }
     ]
-  }
+  },
+  // {
+  //   title: 'Icons',
+  //   icon: WindmillIcon,
+  //   to: '/forms/radio',
+  //   children: [
+  //     {
+  //       title: 'Tabler Icons',
+  //       icon: CircleIcon,
+  //       to: '/icons/tabler'
+  //     },
+  //     {
+  //       title: 'Material Icons',
+  //       icon: CircleIcon,
+  //       to: '/icons/material'
+  //     }
+  //   ]
+  // }
 ];
 
 export default sidebarItem;
