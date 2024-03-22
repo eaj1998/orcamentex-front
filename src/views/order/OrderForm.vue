@@ -25,6 +25,14 @@ interface customer {
   name:string
 }
 
+interface productOrder {
+  _id: String
+  title: String
+  valor: Number
+  code: String
+  qtd: Number
+}
+
 const items = ref<customer[]>([])
 
 const fetchCustomers = (searchCustomer: string) => {
@@ -34,6 +42,24 @@ const fetchCustomers = (searchCustomer: string) => {
     const response = res.data;
     if (response.status === 1) {
       items.value = response.data
+    }
+  })
+}
+
+const getProducts = (searchProduct: string) => {
+  clearTimeout(typing)
+  typing = setTimeout(() => { fetchProducts(searchProduct) }, 120)
+}
+
+const itemsProducts = ref<productOrder[]>([])
+
+const fetchProducts = (searchProduct: string) => {
+  if (searchProduct.length <= 1) return
+  
+  axiosIns.get(`${baseUrl}/product/order`,{ params: { g: searchProduct }}).then(res => {
+    const response = res.data;
+    if (response.status === 1) {
+      itemsProducts.value = response.data
     }
   })
 }
@@ -82,7 +108,8 @@ const pushSnackbar = (item: SnackbarItem) => {
 const form = ref({
   title: '',
   customer: '',
-  products: []
+  products: ref<productOrder[]>([]),
+  searchProduct: ''
 })
 
   
@@ -140,6 +167,32 @@ function saveProduct() {
       });
   }
 }
+
+const productsTable = ref({
+  headers:[ 
+    {title: 'Codigo', key: 'code', sortable: false},
+    {title: 'Nome', key: 'title', sortable: false},
+    {title: 'Valor', key: 'valor', sortable: false},
+    {title: 'Qtd', key: 'qtd', sortable: false},
+    {title: 'Ações', key: 'actions', sortable: false},
+  ]  
+})
+
+function clearSelection(item: any) {
+  if(form.value.products.find(x => x._id === item.raw._id)) {
+    pushSnackbar({ type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
+    return
+  }    
+
+  form.value.searchProduct = ''
+  itemsProducts.value = []
+  form.value.products.push({_id:item.raw._id, code: item.raw.code ,title: item.raw.name, valor: item.raw.valor, qtd: 1})
+
+}
+
+function deleteItem(index: any) {
+  form.value.products.splice(index, 1)
+}
 </script>
 
 <template>
@@ -174,6 +227,50 @@ function saveProduct() {
                     variant="outlined"
                     color="primary"
                   ></v-autocomplete>
+                  <v-autocomplete
+                    v-model="form.searchProduct"
+                    @update:search="getProducts"
+                    label="Produto"
+                    :items="itemsProducts"
+                    item-title="name"
+                    item-value="_id"
+                    class="mt-4 mb-8"
+                    density="comfortable"
+                    hide-details="auto"
+                    variant="outlined"
+                    color="primary"
+                    clearable
+                    :item-text="(item: any) => `${item.raw.code} ${item.raw.title}`"
+                  >  
+                    <template v-slot:item="{ item, props }">
+                      <v-list-item
+                          :="props"
+                          @click="clearSelection(item)"                          
+                      >                                        
+                    </v-list-item>
+                  </template>
+                </v-autocomplete>
+                  <v-data-table
+                      :headers="productsTable.headers"
+                      :items="form.products"
+                      hide-default-footer 
+                      disable-pagination
+                      disable-sort
+                      v-if="form.products"
+                    >                    
+                      <template 
+                      v-slot:item.qtd="{ item }">
+                        {{ item.qtd !== null ? item.qtd : 0 }}
+                      </template>   
+                      <template v-slot:item.actions="{ index, item }">     
+                          <v-icon
+                            size="small"
+                            @click="deleteItem(index)"
+                          >
+                            mdi-delete
+                          </v-icon>
+                      </template>
+                  </v-data-table>                  
                     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
                     Gerar Orçamento</v-btn
                     >
