@@ -125,7 +125,7 @@ const breadcrumbs = shallowRef([
 function saveProduct() {
   if(route.params.id){
     axiosIns
-      .put(`${baseUrl}/product/${route.params.id}`, form.value)
+      .put(`${baseUrl}/order/${route.params.id}`, form.value)
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
@@ -193,13 +193,14 @@ function clearSelection(item: any) {
 function deleteItem(index: any) {
   form.value.products.splice(index, 1)
 }
+
 </script>
 
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard :title="route.params.id ? 'Editar': 'Cadastrar'">
+      <UiParentCard :title="route.params.id ? 'Editar': 'Gerar'">
         <v-row>
             <v-col cols="12" md="12">
                 <v-form class="mt-7 loginForm">
@@ -259,8 +260,16 @@ function deleteItem(index: any) {
                       v-if="form.products"
                     >                    
                       <template 
-                      v-slot:item.qtd="{ item }">
-                        {{ item.qtd !== null ? item.qtd : 0 }}
+                      v-slot:item.qtd="{ index, item }"
+                      >            
+                      <v-text-field
+                          v-model="form.products[index].qtd"
+                          density="compact"
+                          single-line
+                          color="primary"
+                          variant="plain"
+                          type="number"
+                      ></v-text-field>                      
                       </template>   
                       <template v-slot:item.actions="{ index, item }">     
                           <v-icon
