@@ -72,7 +72,7 @@ async function fetchProducts () {
 const headers = ref([
   {title: 'Codigo', key: 'code'},
   {title: 'Nome', key: 'name'},
-  {title: 'Valor', key: 'valor'},
+  {title: 'Valor', key: 'price'},
   {title: 'Criado', key: 'createdAt'},
   {title: 'Ações', key: 'actions'},
 ])

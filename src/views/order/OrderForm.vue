@@ -3,8 +3,6 @@ import { onMounted, ref, shallowRef } from 'vue';
 import axiosIns from '@/plugins/axios';
 import { router } from '@/router';
 
-import { format, unformat } from 'v-money3';
-
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import type { SnackbarItem } from '@/types/structure';
@@ -28,9 +26,9 @@ interface customer {
 interface productOrder {
   _id: String
   title: String
-  valor: Number
+  price: Number
   code: String
-  qtd: Number
+  quantity: Number
 }
 
 const items = ref<customer[]>([])
@@ -128,8 +126,8 @@ function saveProduct() {
       .put(`${baseUrl}/order/${route.params.id}`, form.value)
       .then((res) => {
         const response = res.data
-        form.value.name = response.data.name
-        form.value.valor = response.data.valor
+        // form.value.name = response.data.name
+        // form.value.price = response.data.price
         pushSnackbar({ type: 'success', message: 'Orçamento alterado com sucesso!' })
       })
       .catch((err) => {
@@ -172,8 +170,8 @@ const productsTable = ref({
   headers:[ 
     {title: 'Codigo', key: 'code', sortable: false},
     {title: 'Nome', key: 'title', sortable: false},
-    {title: 'Valor', key: 'valor', sortable: false},
-    {title: 'Qtd', key: 'qtd', sortable: false},
+    {title: 'Valor', key: 'price', sortable: false},
+    {title: 'Qtd', key: 'quantity', sortable: false},
     {title: 'Ações', key: 'actions', sortable: false},
   ]  
 })
@@ -186,7 +184,7 @@ function clearSelection(item: any) {
 
   form.value.searchProduct = ''
   itemsProducts.value = []
-  form.value.products.push({_id:item.raw._id, code: item.raw.code ,title: item.raw.name, valor: item.raw.valor, qtd: 1})
+  form.value.products.push({_id:item.raw._id, code: item.raw.code ,title: item.raw.name, price: item.raw.price, quantity: 1})
 
 }
 
@@ -260,10 +258,10 @@ function deleteItem(index: any) {
                       v-if="form.products"
                     >                    
                       <template 
-                      v-slot:item.qtd="{ index, item }"
+                      v-slot:item.quantity="{ index, item }"
                       >            
                       <v-text-field
-                          v-model="form.products[index].qtd"
+                          v-model="form.products[index].quantity"
                           density="compact"
                           single-line
                           color="primary"

@@ -47,7 +47,7 @@ function fetchProduct() {
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
-        form.value.valor = response.data.valor
+        form.value.price = response.data.price
       })
       .catch((err) => {
         const response = err.response.data
@@ -74,13 +74,13 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 const form = ref({
   name: '',
-  valor: '',
+  price: '',
 })
 
 
 function maskValor () {
   
-  form.value.valor = format(form.value.valor, config);
+  form.value.price = format(form.value.price, config);
   
   }
 
@@ -101,7 +101,7 @@ function saveProduct() {
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
-        form.value.valor = response.data.valor
+        form.value.price = response.data.price
         pushSnackbar({ type: 'success', message: 'Produto alterado com sucesso!' })
       })
       .catch((err) => {
@@ -121,7 +121,7 @@ function saveProduct() {
       .then((res) => {
         const response = res.data
         form.value.name = ''
-        form.value.valor = ''
+        form.value.price = ''
         pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
       })
       .catch((err) => {
@@ -158,7 +158,7 @@ function saveProduct() {
                     color="primary"
                     ></v-text-field>
                     <v-text-field
-                    v-model="form.valor"
+                    v-model="form.price"
                     label="Valor"
                     class="mt-4 mb-8"
                     density="comfortable"
