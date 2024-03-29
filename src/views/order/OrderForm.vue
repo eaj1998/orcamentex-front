@@ -24,10 +24,8 @@ interface customer {
 }
 
 interface productOrder {
-  _id: String
-  title: String
+  product: String
   price: Number
-  code: String
   quantity: Number
 }
 
@@ -168,8 +166,8 @@ function saveProduct() {
 
 const productsTable = ref({
   headers:[ 
-    {title: 'Codigo', key: 'code', sortable: false},
-    {title: 'Nome', key: 'title', sortable: false},
+    {title: 'Codigo', key: 'product.code', sortable: false},
+    {title: 'Nome', key: 'product.name', sortable: false},
     {title: 'Valor', key: 'price', sortable: false},
     {title: 'Qtd', key: 'quantity', sortable: false},
     {title: 'Ações', key: 'actions', sortable: false},
@@ -177,14 +175,16 @@ const productsTable = ref({
 })
 
 function clearSelection(item: any) {
-  if(form.value.products.find(x => x._id === item.raw._id)) {
+  console.log(item);
+  
+  if(form.value.products.find(x => x.product === item.raw._id)) {
     pushSnackbar({ type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
     return
   }    
 
   form.value.searchProduct = ''
   itemsProducts.value = []
-  form.value.products.push({_id:item.raw._id, code: item.raw.code ,title: item.raw.name, price: item.raw.price, quantity: 1})
+  form.value.products.push({product:item.raw, price: item.raw.price, quantity: 1})
 
 }
 
