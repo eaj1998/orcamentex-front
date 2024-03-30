@@ -4,6 +4,7 @@ import AuthRoutes from './AuthRoutes';
 import ProductRoutes from './ProductRoutes';
 import CustomerRoutes from './CustomerRoutes';
 import OrderRoutes from './OrderRoutes';
+import { jwtDecode } from 'jwt-decode'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,12 +27,25 @@ router.beforeEach(async (to, from, next) => {
   const authRequired = !publicPages.includes(to.path);
   const accessToken = localStorage.getItem('accessToken');
   
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    
-    if (authRequired && !accessToken) {
-      return next('/auth/login');
-    } else next();
-  } else {
-    next();
+  if (!to.matched.some((record) => record.meta.requiresAuth)) {
+    return next();
   }
+
+  if (authRequired && typeof accessToken !=  "string") {
+    console.log('caindo aqui');
+    
+    return next('/auth/login');
+  }
+
+  const decodedPayload = jwtDecode(accessToken ?? "")
+  const expirationTokenTime = decodedPayload.exp || 0
+
+  if(Date.now() < expirationTokenTime){
+    console.log('to aqui');
+    
+    return next('/auth/login');  
+  }
+
+  return next();
+  
 });

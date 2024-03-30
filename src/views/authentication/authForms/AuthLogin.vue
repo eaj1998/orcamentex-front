@@ -45,7 +45,6 @@ function login() {
         localStorage.setItem('accessToken',response.data.token);
         localStorage.setItem('firstName', response.data.firstName);
         localStorage.setItem('lastName', response.data.lastName);
-        
         router.push({path: '/home'});
 
       })
