@@ -7,6 +7,7 @@ import UiParentCard from '@/components/shared/UiParentCard.vue';
 import axiosIns from '@/plugins/axios';
 import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
+import download from 'downloadjs'
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
@@ -114,6 +115,38 @@ function editItem (item: any) {
   router.push({path: `/order/edit/${item._id}`});
 }
 
+async function downloadPdf (item: any) {
+ await axiosIns
+      .post(
+        `${baseUrl}/order/download`, 
+        {id: item._id},{
+      responseType: "blob",
+    })
+      .then((res) => {
+        const content = res.headers['content-type']
+        
+        download(res.data, `${item.customer.name}-orcamento${Date.now()}.pdf`,content)
+        pushSnackbar({ type: 'success', message: 'Download realizado com sucesso!' })
+
+      })
+      .catch((err) => {
+        
+        const response = err.response.data
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
+      });
+}
+
+function viewItem(item: any) {
+  router.push({path: `/order/view/${item._id}`});
+}
+
 </script>
 
 <template>
@@ -169,6 +202,13 @@ function editItem (item: any) {
             <v-icon
               class="me-2"
               size="small"
+              @click="viewItem(item)"
+            >
+              mdi-eye
+            </v-icon>
+            <v-icon
+              class="me-2"
+              size="small"
               @click="editItem(item)"
             >
               mdi-pencil
@@ -178,6 +218,12 @@ function editItem (item: any) {
               @click="deleteItem(item)"
             >
               mdi-delete
+            </v-icon>
+            <v-icon
+              size="small"
+              @click="downloadPdf(item)"
+            >
+              mdi-file-pdf-box
             </v-icon>
           </template>   
         </v-data-table>

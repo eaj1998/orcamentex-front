@@ -1,39 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, watchEffect, getCurrentInstance } from 'vue';
 import axiosIns from '@/plugins/axios';
-import { router } from '@/router';
-
-import { format, unformat } from 'v-money3';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import type { SnackbarItem } from '@/types/structure';
 import { useRoute } from 'vue-router';
+import accounting from 'accounting';
 
 const route = useRoute()
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
-
-const config = {
-    debug: false,
-    masked: false,
-    prefix: '',
-    suffix: '',
-    thousands: '.',
-    decimal: '.',
-    precision: 2,
-    disableNegative: false,
-    disabled: false,
-    min: null,
-    max: null,
-    allowBlank: false,
-    minimumNumberOfCharacters: 0,
-    modelModifiers: {
-        number: false,
-    },
-    shouldRound: true,
-    focusOnRight: false,
-}
 
 onMounted(async () => {
   if(route.params.id){
@@ -74,15 +51,8 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 const form = ref({
   name: '',
-  price: '',
+  price: 0,
 })
-
-
-function maskValor () {
-  
-  form.value.price = format(form.value.price, config);
-  
-  }
 
   
 const page = ref({ title: 'Produto' });
@@ -121,7 +91,7 @@ function saveProduct() {
       .then((res) => {
         const response = res.data
         form.value.name = ''
-        form.value.price = ''
+        form.value.price = 0
         pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
       })
       .catch((err) => {
@@ -137,6 +107,7 @@ function saveProduct() {
       });
   }
 }
+
 </script>
 
 <template>
@@ -157,19 +128,19 @@ function saveProduct() {
                     variant="outlined"
                     color="primary"
                     ></v-text-field>
-                    <v-text-field
+                    <v-text-field 
                     v-model="form.price"
-                    label="Valor"
-                    class="mt-4 mb-8"
+                    required
                     density="comfortable"
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
-                    @change="maskValor"
-                    ></v-text-field>
+                    ></v-text-field>            
+
                     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
                     Salvar</v-btn
                     >
+
                     <VSnackbar
                     v-for="(item, index) in snackbarList"
                     :key="`snack-${index}`"
@@ -183,10 +154,7 @@ function saveProduct() {
                     :class="(index < (snackbarList.length - 1)) ? 'secondary-snackbar' : ''"
                 >
                     {{ item.message }}
-                </VSnackbar>
-                    <!-- <div v-if="errors.apiError" class="mt-2">
-                    <v-alert color="error">{{ errors.apiError }}</v-alert>
-                    </div> -->
+                </VSnackbar>                    
                 </v-form>
             </v-col>
     </v-row>

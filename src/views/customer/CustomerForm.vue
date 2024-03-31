@@ -6,6 +6,10 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import type { SnackbarItem } from '@/types/structure';
 import { useRoute } from 'vue-router';
+import { vMaska } from "maska";
+const options = { mask: '(##)#####-####' };
+
+directives: { maska: vMaska }
 
 const route = useRoute()
 
@@ -13,11 +17,11 @@ const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 onMounted(async () => {
   if(route.params.id){
-    fetchProduct()
+    await fetchCustomer()
   }
 })
 
-function fetchProduct() {
+async function fetchCustomer() {
   axiosIns
       .get(`${baseUrl}/customer/${route.params.id}`)
       .then((res) => {
@@ -25,6 +29,12 @@ function fetchProduct() {
         form.value.name = response.data.name
         form.value.phone = response.data.phone
         form.value.email = response.data.email
+        form.value.cpfCnpj = response.data.cpfCnpj
+        form.value.street = response.data.street
+        form.value.city = response.data.city
+        form.value.state = response.data.state
+        form.value.cep = response.data.cep
+        form.value.number = response.data.number
       })
       .catch((err) => {
         const response = err.response.data
@@ -51,7 +61,15 @@ const pushSnackbar = (item: SnackbarItem) => {
 const form = ref({
   name: '',
   phone: '',
-  email: ''
+  email: '',
+  cpfCnpj: '',
+  cep: '',
+  street: '',
+  number: '',
+  city: '',
+  state:'',
+  district:'',
+  inscricaoEstadual: ''
 })
 
   
@@ -112,6 +130,34 @@ function saveProduct() {
       });
   }
 }
+
+async function getAddress() {
+  axiosIns
+      .get(`${baseUrl}/customer/buscaCep/${form.value.cep}`)
+      .then((res) => {
+        const response = res.data 
+        console.log(res);
+        
+        if(response.status === 1){
+          form.value.street = response.data.address
+          form.value.city = response.data.city
+          form.value.state = response.data.state
+          form.value.district = response.data.district
+        }
+
+      })
+      .catch((err) => {
+        const response = err.response.data
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
+      });
+}
 </script>
 
 <template>
@@ -122,34 +168,121 @@ function saveProduct() {
         <v-row>
             <v-col cols="12" md="12">
                 <v-form class="mt-7 loginForm">
-                    <v-text-field
-                    v-model="form.name"
-                    label="Nome"
-                    class="mt-4 mb-8"
-                    required
-                    density="comfortable"
-                    hide-details="auto"
-                    variant="outlined"
-                    color="primary"
-                    ></v-text-field>
-                    <v-text-field
-                    v-model="form.phone"
-                    label="Telefone"
-                    class="mt-4 mb-8"
-                    density="comfortable"
-                    hide-details="auto"
-                    variant="outlined"
-                    color="primary"
-                    ></v-text-field>
-                    <v-text-field
-                    v-model="form.email"
-                    label="E-mail"
-                    class="mt-4 mb-8"
-                    density="comfortable"
-                    hide-details="auto"
-                    variant="outlined"
-                    color="primary"
-                    ></v-text-field>
+                  <v-row>
+                    <v-col cols="12" md="12">
+                        <v-text-field
+                        v-model="form.name"
+                        label="Nome"
+                        class="mt-4"
+                        required
+                        density="comfortable"
+                        hide-details="auto"
+                        variant="outlined"
+                        color="primary"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="4" md="4">
+                      <v-text-field
+                      v-model="form.cpfCnpj"
+                      label="CPF/CNPJ"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col>  
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.phone"
+                      label="Telefone"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      v-maska:[options]
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="4" md="4">
+                      <v-text-field
+                      v-model="form.email"
+                      label="E-mail"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.inscricaoEstadual"
+                      label="Inscricao Estadual"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.cep"
+                      label="CEP"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      @change="getAddress"
+                      ></v-text-field>
+                    </v-col>  
+                    <v-col cols="4" md="4">
+                      <v-text-field
+                      v-model="form.street"
+                      label="Rua"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col> 
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.number"
+                      label="Complemento"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col> 
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.city"
+                      label="Cidade"
+                      class=""
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col> 
+                    <v-col cols="2" md="2">
+                      <v-text-field
+                      v-model="form.state"
+                      label="Estado"
+                      class="mb-8"
+                      density="comfortable"
+                      hide-details="auto"
+                      variant="outlined"
+                      color="primary"
+                      ></v-text-field>
+                    </v-col>   
+                  </v-row>
                     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
                     Salvar</v-btn
                     >

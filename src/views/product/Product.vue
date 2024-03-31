@@ -90,14 +90,14 @@ function deleteItemConfirm(){
       })
       .catch((err) => {
         const response = err.response.data
-        // if(response.message){
-          // pushSnackbar({ type: 'error', message: response.message })
-        // }
-        // if(response.data) {
-        //   response.data.map((erro: any) => {
-        //     pushSnackbar({ type: 'error', message: erro.msg })
-        //   })
-        // }
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
       });
   }
 }
@@ -114,7 +114,6 @@ function deleteItem(item: any) {
 function editItem (item: any) {
   router.push({path: `/product/edit/${item._id}`});
 }
-
 </script>
 
 <template>
@@ -136,7 +135,7 @@ function editItem (item: any) {
     </VSnackbar>
     <v-col cols="12" md="12">
       <UiParentCard title="Lista">
-        <v-data-table
+        <v-data-table        
           :headers="headers"
           :items="state.products"
           :sort-by="[{ key: 'createdAt', order: 'desc' }]"

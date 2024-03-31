@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef } from 'vue';
 import axiosIns from '@/plugins/axios';
-import { router } from '@/router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import type { SnackbarItem } from '@/types/structure';
 import { useRoute } from 'vue-router';
+import { router } from '@/router';
 
 const route = useRoute()
 
@@ -21,6 +21,7 @@ onMounted(async () => {
 interface customer {
   _id: string
   name:string
+  cpfCnpj: string
 }
 
 interface productOrder {
@@ -34,7 +35,7 @@ const items = ref<customer[]>([])
 const fetchCustomers = (searchCustomer: string) => {
   if (searchCustomer.length <= 3) return
   
-  axiosIns.get(`${baseUrl}/customer/getCustomers`,{ params: { name: searchCustomer }}).then(res => {
+  axiosIns.get(`${baseUrl}/customer/getCustomers`,{ params: { g: searchCustomer }}).then(res => {
     const response = res.data;
     if (response.status === 1) {
       items.value = response.data
@@ -118,14 +119,13 @@ const breadcrumbs = shallowRef([
   }
 ]);
 
-function saveProduct() {
+async function saveOrder() {
   if(route.params.id){
-    axiosIns
+   await axiosIns
       .put(`${baseUrl}/order/${route.params.id}`, form.value)
       .then((res) => {
         const response = res.data
-        // form.value.name = response.data.name
-        // form.value.price = response.data.price
+       
         pushSnackbar({ type: 'success', message: 'Orçamento alterado com sucesso!' })
       })
       .catch((err) => {
@@ -140,13 +140,11 @@ function saveProduct() {
         }
       });
   } else {
-    axiosIns
+    await axiosIns
       .post(`${baseUrl}/order`, form.value)
       .then((res) => {
         const response = res.data
-        form.value.title = ''
-        form.value.customer = ''
-        form.value.products = []
+        router.push({path: `/order/view/${response.data._id}`});
 
         pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
       })
@@ -175,8 +173,6 @@ const productsTable = ref({
 })
 
 function clearSelection(item: any) {
-  console.log(item);
-  
   if(form.value.products.find(x => x.product === item.raw._id)) {
     pushSnackbar({ type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
     return
@@ -278,7 +274,7 @@ function deleteItem(index: any) {
                           </v-icon>
                       </template>
                   </v-data-table>                  
-                    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
+                    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveOrder">
                     Gerar Orçamento</v-btn
                     >
                     <VSnackbar
@@ -295,9 +291,6 @@ function deleteItem(index: any) {
                 >
                     {{ item.message }}
                 </VSnackbar>
-                    <!-- <div v-if="errors.apiError" class="mt-2">
-                    <v-alert color="error">{{ errors.apiError }}</v-alert>
-                    </div> -->
                 </v-form>
             </v-col>
     </v-row>

@@ -32,17 +32,13 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (authRequired && typeof accessToken !=  "string") {
-    console.log('caindo aqui');
-    
     return next('/auth/login');
   }
 
   const decodedPayload = jwtDecode(accessToken ?? "")
   const expirationTokenTime = decodedPayload.exp || 0
-
-  if(Date.now() < expirationTokenTime){
-    console.log('to aqui');
-    
+  
+  if(Date.now()/1000 > expirationTokenTime){
     return next('/auth/login');  
   }
 

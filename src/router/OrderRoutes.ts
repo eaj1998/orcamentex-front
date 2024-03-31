@@ -20,6 +20,11 @@ const OrderRoutes = {
         name: 'order Edit',
         path: '/order/edit/:id',
         component: () => import('@/views/order/OrderForm.vue')
+      },
+      {
+        name: 'order view',
+        path: '/order/view/:id',
+        component: () => import('@/views/order/OrderDetail.vue')
       }
     ]
   };

@@ -24,7 +24,6 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
-  { header: 'Dashboard' },
   {
     title: 'Home',
     icon: Home2Icon,
