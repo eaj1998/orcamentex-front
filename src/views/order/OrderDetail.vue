@@ -9,6 +9,8 @@ import { useRoute } from 'vue-router';
 import { reactive } from 'vue';
 import download from 'downloadjs';
 
+import { Utils } from "@/utils/Util";
+
 const route = useRoute()
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
@@ -177,15 +179,18 @@ async function downloadPdf () {
                           variant="plain"
                           type="number"
                       ></v-text-field>                      
-                      </template>   
+                      </template>     
+                      <template v-slot:item.price="{ index, item }">     
+                          {{  Utils.formatMoney(item.price) }}
+                      </template>                    
                       <template v-slot:item.total="{ index, item }">     
-                          {{ item.quantity * item.price }}
+                          {{  Utils.formatMoney(item.quantity * item.price) }}
                       </template>
                     <template #bottom v-if="!showFooter"></template>
                   </v-data-table>    
                   <v-row>
                     <v-col cols="6" md="6" class="download-order"><v-btn color="primary" @click="downloadPdf">Baixar Orçamento</v-btn></v-col>
-                    <v-col cols="6" md="6" class="invoice-total">Total: R$  {{ state.total }}  </v-col>
+                    <v-col cols="6" md="6" class="invoice-total">Total: {{ Utils.formatMoney(state.total) }}  </v-col>
                   </v-row>                       
                     <VSnackbar
                     v-for="(item, index) in snackbarList"

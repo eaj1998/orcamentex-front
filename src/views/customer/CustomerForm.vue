@@ -181,7 +181,7 @@ async function getAddress() {
                         color="primary"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="4" md="4">
+                    <v-col cols="12" md="12">
                       <v-text-field
                       v-model="form.cpfCnpj"
                       label="CPF/CNPJ"
@@ -192,7 +192,7 @@ async function getAddress() {
                       color="primary"
                       ></v-text-field>
                     </v-col>  
-                    <v-col cols="2" md="2">
+                    <v-col cols="3" md="3">
                       <v-text-field
                       v-model="form.phone"
                       label="Telefone"
@@ -204,7 +204,7 @@ async function getAddress() {
                       v-maska:[options]
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="4" md="4">
+                    <v-col cols="5" md="5">
                       <v-text-field
                       v-model="form.email"
                       label="E-mail"
@@ -215,7 +215,7 @@ async function getAddress() {
                       color="primary"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="2" md="2">
+                    <v-col cols="4" md="4">
                       <v-text-field
                       v-model="form.inscricaoEstadual"
                       label="Inscricao Estadual"

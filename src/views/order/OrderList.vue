@@ -9,6 +9,8 @@ import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
 import download from 'downloadjs'
 
+import { Utils } from "@/utils/Util";
+
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const snackbarList = ref([]);
@@ -197,6 +199,9 @@ function viewItem(item: any) {
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+          </template>
+          <template v-slot:item.createdAt="{ item }">
+            {{ Utils.formatDateFromString(item.createdAt) }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon

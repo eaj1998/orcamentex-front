@@ -6,10 +6,11 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import type { SnackbarItem } from '@/types/structure';
 import { useRoute } from 'vue-router';
-import accounting from 'accounting';
+import { Utils } from "@/utils/Util";
+
+
 
 const route = useRoute()
-
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 onMounted(async () => {
@@ -18,15 +19,17 @@ onMounted(async () => {
   }
 })
 
-function fetchProduct() {
-  axiosIns
+async function fetchProduct() {
+ await axiosIns
       .get(`${baseUrl}/product/${route.params.id}`)
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
-        form.value.price = response.data.price
+        form.value.price = Utils.formatMoney(response.data.price)
       })
       .catch((err) => {
+        console.log(err);
+        
         const response = err.response.data
         if(response.message){
           pushSnackbar({ type: 'error', message: response.message })
@@ -51,9 +54,8 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 const form = ref({
   name: '',
-  price: 0,
+  price: '',
 })
-
   
 const page = ref({ title: 'Produto' });
 const breadcrumbs = shallowRef([
@@ -64,14 +66,19 @@ const breadcrumbs = shallowRef([
   }
 ]);
 
-function saveProduct() {
+async function saveProduct() {
   if(route.params.id){
-    axiosIns
-      .put(`${baseUrl}/product/${route.params.id}`, form.value)
+    console.log('passou aqui');
+    
+    await axiosIns
+      .put(`${baseUrl}/product/${route.params.id}`, {
+        name: form.value.name,
+        price: Utils.unformatMoney(form.value.price)
+      })
       .then((res) => {
         const response = res.data
         form.value.name = response.data.name
-        form.value.price = response.data.price
+        form.value.price =  Utils.formatMoney(response.data.price)
         pushSnackbar({ type: 'success', message: 'Produto alterado com sucesso!' })
       })
       .catch((err) => {
@@ -87,11 +94,14 @@ function saveProduct() {
       });
   } else {
     axiosIns
-      .post(`${baseUrl}/product`, form.value)
+      .post(`${baseUrl}/product`, {
+        name: form.value.name,
+        price: Utils.unformatMoney(form.value.price)
+      })
       .then((res) => {
         const response = res.data
         form.value.name = ''
-        form.value.price = 0
+        form.value.price = ''
         pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
       })
       .catch((err) => {
@@ -106,6 +116,10 @@ function saveProduct() {
         }
       });
   }
+}
+
+function maskMoney() {
+  form.value.price = Utils.formatMoney(form.value.price)
 }
 
 </script>
@@ -135,6 +149,7 @@ function saveProduct() {
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
+                    @change="maskMoney"
                     ></v-text-field>            
 
                     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">

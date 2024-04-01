@@ -130,9 +130,7 @@ async function saveOrder() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
-        }
+       
         if(response.data) {
           response.data.map((erro: any) => {
             pushSnackbar({ type: 'error', message: erro.msg })
@@ -150,9 +148,6 @@ async function saveOrder() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
-        }
         if(response.data) {
           response.data.map((erro: any) => {
             pushSnackbar({ type: 'error', message: erro.msg })
@@ -197,17 +192,7 @@ function deleteItem(index: any) {
       <UiParentCard :title="route.params.id ? 'Editar': 'Gerar'">
         <v-row>
             <v-col cols="12" md="12">
-                <v-form class="mt-7 loginForm">
-                    <v-text-field
-                    v-model="form.title"
-                    label="Titulo"
-                    class="mt-4 mb-8"
-                    required
-                    density="comfortable"
-                    hide-details="auto"
-                    variant="outlined"
-                    color="primary"
-                    ></v-text-field>
+                <v-form class="mt-7 loginForm">                  
                     <v-autocomplete
                     v-model="form.customer"
                     @update:search="getCustomer"

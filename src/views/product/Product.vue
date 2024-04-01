@@ -7,6 +7,7 @@ import UiParentCard from '@/components/shared/UiParentCard.vue';
 import axiosIns from '@/plugins/axios';
 import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
+import { Utils } from "@/utils/Util";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
@@ -164,6 +165,12 @@ function editItem (item: any) {
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+          </template>
+          <template v-slot:item.createdAt="{ item }">
+            {{ Utils.formatDateFromString(item.createdAt) }}
+          </template>
+          <template v-slot:item.price="{ item }">
+            R$ {{ Utils.formatMoney(item.price) }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon

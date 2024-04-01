@@ -5,6 +5,7 @@
     "module": "ESNext",
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./src/*"]
     },
