@@ -128,11 +128,47 @@ async function downloadPdf () {
       });
 }
 
+async function sendEmail () {
+ await axiosIns
+      .post(
+        `${baseUrl}/order/send`, 
+        {id: route.params.id})
+      .then((res) => {
+        
+        pushSnackbar({ type: 'success', message: 'Em-mail enviado com sucesso!' })
+
+      })
+      .catch((err) => {
+        const response = err.response.data
+        if(response.message){
+          pushSnackbar({ type: 'error', message: response.message })
+        }
+        if(response.data) {
+          response.data.map((erro: any) => {
+            pushSnackbar({ type: 'error', message: erro.msg })
+          })
+        }
+      });
+}
 </script>
 
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-row>
+    <VSnackbar
+        v-for="(item, index) in snackbarList"
+        :key="`snack-${index}`"
+
+        v-model="item.isVisible"
+        location="bottom center"
+        :color="item.type"
+
+        close-on-content-click
+
+        :class="(index < (snackbarList.length - 1)) ? 'secondary-snackbar' : ''"
+    >
+        {{ item.message }}
+    </VSnackbar>
     <v-col cols="12" md="12">
       <UiParentCard>
         <v-row>
@@ -147,7 +183,7 @@ async function downloadPdf () {
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
-                    disabled
+                    :readonly="true"
                     ></v-text-field>
                     <v-autocomplete
                     v-model="form.customer"
@@ -160,7 +196,7 @@ async function downloadPdf () {
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
-                    disabled
+                    :readonly="true"
                   ></v-autocomplete>                 
                   <v-data-table
                       :headers="productsTable.headers"
@@ -178,34 +214,24 @@ async function downloadPdf () {
                           color="primary"
                           variant="plain"
                           type="number"
+                          :readonly="true"
                       ></v-text-field>                      
                       </template>     
                       <template v-slot:item.price="{ index, item }">     
                           {{  Utils.formatMoney(item.price) }}
                       </template>                    
-                      <template v-slot:item.total="{ index, item }">     
+                      <template v-slot:item.total="{ index, item }" >     
                           {{  Utils.formatMoney(item.quantity * item.price) }}
                       </template>
                     <template #bottom v-if="!showFooter"></template>
                   </v-data-table>    
                   <v-row>
-                    <v-col cols="6" md="6" class="download-order"><v-btn color="primary" @click="downloadPdf">Baixar Orçamento</v-btn></v-col>
+                    <v-col cols="6" md="6" class="download-order">
+                      <v-btn color="primary" @click="downloadPdf">Baixar Orçamento</v-btn>
+                      <v-btn class="mail-order" color="primary" @click="sendEmail">Enviar por E-mail</v-btn>
+                    </v-col>
                     <v-col cols="6" md="6" class="invoice-total">Total: {{ Utils.formatMoney(state.total) }}  </v-col>
-                  </v-row>                       
-                    <VSnackbar
-                    v-for="(item, index) in snackbarList"
-                    :key="`snack-${index}`"
-
-                    v-model="item.isVisible"
-                    location="bottom center"
-                    :color="item.type"
-
-                    close-on-content-click
-
-                    :class="(index < (snackbarList.length - 1)) ? 'secondary-snackbar' : ''"
-                >
-                    {{ item.message }}
-                </VSnackbar>
+                  </v-row>                                           
                 </v-form>
             </v-col>
     </v-row>
@@ -222,5 +248,9 @@ async function downloadPdf () {
     }
     .download-order {
         margin-top: 20px
+    }
+    .mail-order {
+      margin-left: 10px;
+      text-align: left;
     }
 </style>

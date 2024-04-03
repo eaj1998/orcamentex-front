@@ -8,6 +8,8 @@ import type { SnackbarItem } from '@/types/structure';
 import { useRoute } from 'vue-router';
 import { router } from '@/router';
 
+import { Utils } from "@/utils/Util";
+
 const route = useRoute()
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
@@ -237,7 +239,10 @@ function deleteItem(index: any) {
                       disable-pagination
                       disable-sort
                       v-if="form.products"
-                    >                    
+                    >           
+                    <template v-slot:item.price="{ index, item }">     
+                         {{ Utils.formatMoney(item.price) }}
+                      </template>         
                       <template 
                       v-slot:item.quantity="{ index, item }"
                       >            
