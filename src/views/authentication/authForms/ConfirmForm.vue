@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import axiosIns from '@/plugins/axios';
 import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
@@ -13,7 +13,7 @@ const form = ref({
 })
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -35,11 +35,11 @@ function create() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
           })
         }
       });

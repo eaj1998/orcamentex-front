@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, type Ref  } from 'vue';
 import { Form } from 'vee-validate';
 import axiosIns from '@/plugins/axios';
 import { router } from '@/router';
@@ -24,7 +24,7 @@ const passwordRules = ref([
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
 
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -49,13 +49,14 @@ function login() {
 
       })
       .catch((err) => {
-        const response = err.response.data
+        console.log(err)
+        const response = err
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true,type: 'error', message: response.message })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
           })
         }
       });

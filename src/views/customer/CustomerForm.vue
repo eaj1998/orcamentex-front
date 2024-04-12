@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, type Ref } from 'vue';
 import axiosIns from '@/plugins/axios';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
@@ -39,16 +39,16 @@ async function fetchCustomer() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({  isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
 }
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -93,16 +93,16 @@ function saveProduct() {
         form.value.phone = response.data.phone
         form.value.email = response.data.email
 
-        pushSnackbar({ type: 'success', message: 'Cliente alterado com sucesso!' })
+        pushSnackbar({ isVisible:true, type: 'success', message: 'Cliente alterado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
           })
         }
       });
@@ -115,16 +115,16 @@ function saveProduct() {
         form.value.phone = ''
         form.value.email = ''
         if(res.data.status === 1)
-          pushSnackbar({ type: 'success', message: 'Cliente adicionado com sucesso!' })
+          pushSnackbar({ isVisible:true, type: 'success', message: 'Cliente adicionado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
           })
         }
       });
@@ -149,11 +149,11 @@ async function getAddress() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });

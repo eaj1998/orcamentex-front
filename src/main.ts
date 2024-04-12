@@ -7,10 +7,10 @@ import '@/scss/style.scss';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
+import './registerServiceWorker';
 
 // print
 import print from 'vue3-print-nb';
-
 const app = createApp(App);
 
 app.use(router);

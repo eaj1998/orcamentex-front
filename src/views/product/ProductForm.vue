@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watchEffect, getCurrentInstance } from 'vue';
+import { onMounted, ref, shallowRef, watchEffect, getCurrentInstance, type Ref } from 'vue';
 import axiosIns from '@/plugins/axios';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
@@ -32,17 +32,17 @@ async function fetchProduct() {
         
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
 }
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -79,16 +79,16 @@ async function saveProduct() {
         const response = res.data
         form.value.name = response.data.name
         form.value.price =  Utils.formatMoney(response.data.price)
-        pushSnackbar({ type: 'success', message: 'Produto alterado com sucesso!' })
+        pushSnackbar({ isVisible:true, type: 'success', message: 'Produto alterado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -102,16 +102,16 @@ async function saveProduct() {
         const response = res.data
         form.value.name = ''
         form.value.price = ''
-        pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
+        pushSnackbar({isVisible:true, type: 'success', message: 'Produto adicionado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });

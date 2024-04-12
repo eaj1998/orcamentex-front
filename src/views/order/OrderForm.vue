@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, type Ref } from 'vue';
 import axiosIns from '@/plugins/axios';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
-import type { SnackbarItem } from '@/types/structure';
+import type { SnackbarItem, customer, productOrder } from '@/types/structure';
 import { useRoute } from 'vue-router';
 import { router } from '@/router';
 
@@ -20,17 +20,6 @@ onMounted(async () => {
   }
 })
 
-interface customer {
-  _id: string
-  name:string
-  cpfCnpj: string
-}
-
-interface productOrder {
-  product: String
-  price: Number
-  quantity: Number
-}
 
 const items = ref<customer[]>([])
 
@@ -84,17 +73,17 @@ function fetchOrder() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
 }
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -128,14 +117,14 @@ async function saveOrder() {
       .then((res) => {
         const response = res.data
        
-        pushSnackbar({ type: 'success', message: 'Orçamento alterado com sucesso!' })
+        pushSnackbar({ isVisible:true, type: 'success', message: 'Orçamento alterado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
        
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -146,13 +135,13 @@ async function saveOrder() {
         const response = res.data
         router.push({path: `/order/view/${response.data._id}`});
 
-        pushSnackbar({ type: 'success', message: 'Produto adicionado com sucesso!' })
+        pushSnackbar({ isVisible:true, type: 'success', message: 'Produto adicionado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -171,7 +160,7 @@ const productsTable = ref({
 
 function clearSelection(item: any) {
   if(form.value.products.find(x => x.product === item.raw._id)) {
-    pushSnackbar({ type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
+    pushSnackbar({ isVisible: true, type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
     return
   }    
 

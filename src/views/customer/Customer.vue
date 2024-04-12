@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, shallowRef } from 'vue';
+import { onMounted, reactive, ref, shallowRef, type Ref } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
@@ -11,7 +11,7 @@ import { Utils } from "@/utils/Util";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -65,11 +65,11 @@ async function fetchCustomers () {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -90,17 +90,17 @@ function deleteItemConfirm(){
       .then((res) => {
         const response = res.data
         fetchCustomers();
-        pushSnackbar({ type: 'success', message: 'Cliente deletado com sucesso!' })
+        pushSnackbar({ isVisible:true,type: 'success', message: 'Cliente deletado com sucesso!' })
 
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -171,7 +171,7 @@ function editItem (item: any) {
                 </v-card>
               </v-dialog>
           </template>
-          <template v-slot:item.createdAt="{ item }">
+          <template v-slot:item.createdAt="{item}: {item: any}">
             {{ Utils.formatDateFromString(item.createdAt) }}
           </template>
           <template v-slot:item.actions="{ item }">

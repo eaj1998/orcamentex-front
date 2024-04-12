@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, type Ref } from 'vue';
 import axiosIns from '@/plugins/axios';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
-import type { SnackbarItem } from '@/types/structure';
+import { type customer, type SnackbarItem, type productOrder } from '@/types/structure';
 import { useRoute } from 'vue-router';
 import { reactive } from 'vue';
 import download from 'downloadjs';
@@ -41,17 +41,17 @@ async function fetchOrder() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
           })
         }
       });
 }
 
-const snackbarList = ref([]);
+const snackbarList: Ref<SnackbarItem[]> = ref([]);
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -62,7 +62,7 @@ const pushSnackbar = (item: SnackbarItem) => {
 }
 const form = ref({
   title: '',
-  customer: '',
+  customer: ref<customer>,
   products: ref<productOrder[]>([]),
 })
 
@@ -92,8 +92,8 @@ async function cartTotalAmount() {
     let total = 0;
     console.log(form.value.products);
     
-    total = form.value.products.reduce( (acc, item) => {
-        return acc + (item.quantity * item.price)
+    total = form.value.products.reduce( (acc, item: any) => {
+        return acc + (  item.price * item.quantity)
     }, 0)
 
     return total;
@@ -111,18 +111,18 @@ async function downloadPdf () {
         const content = res.headers['content-type']
         
         download(res.data, `${form.value.customer.name}-orcamento${Date.now()}.pdf`,content)
-        pushSnackbar({ type: 'success', message: 'Download realizado com sucesso!' })
+        pushSnackbar({ isVisible: true, type: 'success', message: 'Download realizado com sucesso!' })
 
       })
       .catch((err) => {
         
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -135,17 +135,17 @@ async function sendEmail () {
         {id: route.params.id})
       .then((res) => {
         
-        pushSnackbar({ type: 'success', message: 'Em-mail enviado com sucesso!' })
+        pushSnackbar({ isVisible: true, type: 'success', message: 'Em-mail enviado com sucesso!' })
 
       })
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ type: 'error', message: response.message })
+          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ type: 'error', message: erro.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -220,7 +220,7 @@ async function sendEmail () {
                       <template v-slot:item.price="{ index, item }">     
                           {{  Utils.formatMoney(item.price) }}
                       </template>                    
-                      <template v-slot:item.total="{ index, item }" >     
+                      <template v-slot:item.total="{item}: {item: any}" >     
                           {{  Utils.formatMoney(item.quantity * item.price) }}
                       </template>
                     <template #bottom v-if="!showFooter"></template>

@@ -1,0 +1,27 @@
+{
+    "name": "Tubo Oeste",
+    "short_name": "Tubo Oeste",
+    "start_url": "http://192.168.0.10/auth/login",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4DBA87",
+    "description": "Tubo Oeste - Orcamentos",
+    "icons": [
+      {
+        "src": "/img/icons/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/img/icons/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ],
+    "scope": "/",
+    "lang": "pt-BR",
+    "dir": "ltr"
+  }
+  

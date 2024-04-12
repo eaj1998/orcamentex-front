@@ -2,7 +2,7 @@ import accounting from "accounting";
 
 export class Utils {
 
-    static formatMoney (amount)  {
+    static formatMoney (amount: any)  {
         return new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           maximumFractionDigits: 2,
@@ -10,7 +10,7 @@ export class Utils {
       } ).format(amount);
     }
   
-    static unformatMoney (value) {
+    static unformatMoney (value: any) {
         return accounting.unformat(value, ',')
     }
 

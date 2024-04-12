@@ -4,13 +4,13 @@
   "private": true,
   "author": "CodedThemes",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 80",
     "build": "vue-tsc --noEmit && vite build ",
-    "build-stage": "vue-tsc --noEmit && vite build --base=/vue/free/stage/",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "build-prod": "vue-tsc --noEmit && vite build --base=/vue/free/",
+    "build-stage": "vue-tsc --noEmit && vite build --base=/vue/free/stage/",
+    "dev": "vite --host 0.0.0.0 --port 80",
     "preview": "vite preview --port 5050",
-    "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@tiptap/starter-kit": "2.2.2",
@@ -27,6 +27,7 @@
     "lodash": "4.17.21",
     "maska": "^2.1.11",
     "pinia": "2.1.7",
+    "register-service-worker": "^1.7.2",
     "remixicon": "4.1.0",
     "snackbar": "^1.1.0",
     "v-money": "^0.8.1",
@@ -54,6 +55,7 @@
     "@types/node": "^20.11.18",
     "@types/vue-the-mask": "^0.11.5",
     "@vitejs/plugin-vue": "5.0.4",
+    "@vue/cli-plugin-pwa": "~5.0.0",
     "@vue/eslint-config-prettier": "9.0.0",
     "@vue/eslint-config-typescript": "12.0.0",
     "@vue/tsconfig": "0.5.1",
