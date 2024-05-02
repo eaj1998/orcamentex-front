@@ -42,7 +42,7 @@ const getProducts = (searchProduct: string) => {
 const itemsProducts = ref<productOrder[]>([])
 
 const fetchProducts = (searchProduct: string) => {
-  if (searchProduct.length <= 1) return
+  // if (searchProduct.length <= 1) return
   
   axiosIns.get(`${baseUrl}/product/order`,{ params: { g: searchProduct }}).then(res => {
     const response = res.data;
