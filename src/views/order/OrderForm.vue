@@ -44,7 +44,7 @@ const itemsProducts = ref<productOrder[]>([])
 const fetchProducts = (searchProduct: string) => {
   // if (searchProduct.length <= 1) return
   
-  axiosIns.get(`${baseUrl}/product/order`,{ params: { g: searchProduct }}).then(res => {
+  axiosIns.get(`${baseUrl}/product/code`,{ params: { g: searchProduct }}).then(res => {
     const response = res.data;
     if (response.status === 1) {
       itemsProducts.value = response.data
