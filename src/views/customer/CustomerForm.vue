@@ -39,7 +39,7 @@ async function fetchCustomer() {
       .catch((err) => {
         const response = err.response.data
         if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -118,6 +118,7 @@ function saveCustomer() {
           pushSnackbar({ isVisible:true, type: 'success', message: 'Cliente adicionado com sucesso!' })
       })
       .catch((err) => {
+        console.log(err)
         const response = err.response.data
         if(response.message && !response.data){
           pushSnackbar({ isVisible: true, type: 'error', message: response.message })
