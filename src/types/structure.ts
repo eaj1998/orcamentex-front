@@ -6,7 +6,7 @@ export interface SnackbarItem {
   }
 
 export interface productOrder {
-    product: String
+    product: product
     price: Number
     quantity: Number
 }
@@ -16,4 +16,10 @@ export interface customer {
   name:string
   cpfCnpj: string
 }
-  
+
+export interface product {
+  _id: string
+  name: string
+  code: string
+
+}

@@ -40,8 +40,6 @@ async function fetchProducts(searchProduct: string) {
     const response = res.data;
     if (response.data) {
       const prod = response.data[0]
-      console.log(form.value.products);
-      console.log(prod._id);
 
       if (form.value.products.find(x => x.product._id === prod._id)) {
         pushSnackbar({ isVisible: true, type: 'error', message: "Produto já adicionado! Utilize a tabela abaixo para editar a quantidade" })
@@ -117,8 +115,6 @@ async function saveOrder() {
     await axiosIns
       .put(`${baseUrl}/order/${route.params.id}`, form.value)
       .then((res) => {
-        const response = res.data
-
         pushSnackbar({ isVisible: true, type: 'success', message: 'Orçamento alterado com sucesso!' })
       })
       .catch((err) => {
@@ -137,7 +133,7 @@ async function saveOrder() {
         const response = res.data
         router.push({ path: `/order/view/${response.data._id}` });
 
-        pushSnackbar({ isVisible: true, type: 'success', message: 'Produto adicionado com sucesso!' })
+        pushSnackbar({ isVisible: true, type: 'success', message: 'Orçamento gerado com sucesso!' })
       })
       .catch((err) => {
         const response = err.response.data
