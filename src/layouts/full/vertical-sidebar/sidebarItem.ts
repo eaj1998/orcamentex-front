@@ -1,10 +1,10 @@
 import {
   CircleIcon,
-  WindmillIcon,
   PackageIcon,
   Home2Icon,
   UserIcon,
-  ShoppingCartIcon
+  ShoppingCartIcon,
+  TableIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -80,6 +80,11 @@ const sidebarItem: menu[] = [
         to: '/order/list'
       }
     ]
+  },
+  {
+    title: 'Tabela de Preço',
+    icon: TableIcon,
+    to: '/product/downloadTabela/1',    
   },
   // {
   //   title: 'Icons',

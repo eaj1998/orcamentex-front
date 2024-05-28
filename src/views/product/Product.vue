@@ -8,10 +8,14 @@ import axiosIns from '@/plugins/axios';
 import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
 import { Utils } from "@/utils/Util";
+import { useRoute } from 'vue-router';
+import download from 'downloadjs';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const snackbarList: Ref<SnackbarItem[]> = ref([]);
+
+const route = useRoute()
 
 const pushSnackbar = (item: SnackbarItem) => {
   snackbarList.value.push({
@@ -23,6 +27,11 @@ const pushSnackbar = (item: SnackbarItem) => {
 
 
 onMounted(async () => {
+  
+  if(route.params.downloadTabela){
+    downloadPdf()
+    router.push({ path: `/product` });
+  }
   await fetchProducts()
 })
 
