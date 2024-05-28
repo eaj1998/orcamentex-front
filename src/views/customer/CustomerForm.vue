@@ -82,7 +82,7 @@ const breadcrumbs = shallowRef([
   }
 ]);
 
-function saveProduct() {
+function saveCustomer() {
   if(route.params.id){
     axiosIns
       .put(`${baseUrl}/customer/${route.params.id}`, form.value)
@@ -97,12 +97,12 @@ function saveProduct() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -119,12 +119,13 @@ function saveProduct() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
-            pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+            pushSnackbar({ isVisible: true, type: 'error', message: erro.msg })
           })
         }
       });
@@ -148,8 +149,9 @@ async function getAddress() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -283,7 +285,7 @@ async function getAddress() {
                       ></v-text-field>
                     </v-col>   
                   </v-row>
-                    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveProduct">
+                    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="saveCustomer">
                     Salvar</v-btn
                     >
                     <VSnackbar

@@ -9,6 +9,7 @@ import { useRoute } from 'vue-router';
 import { router } from '@/router';
 
 import { Utils } from "@/utils/Util";
+import { reactive } from 'vue';
 
 const route = useRoute()
 
@@ -20,6 +21,14 @@ onMounted(async () => {
   }
 })
 
+
+interface State {  
+  search: string
+}
+
+const state: State = reactive({
+  search: ''
+})
 
 const items = ref<customer[]>([])
 
@@ -35,6 +44,8 @@ const fetchCustomers = (searchCustomer: string) => {
 }
 
 const getProducts = (searchProduct: string) => {
+  console.log(searchProduct);
+  
   clearTimeout(typing)
   typing = setTimeout(() => { fetchProducts(searchProduct) }, 120)
 }
@@ -42,13 +53,13 @@ const getProducts = (searchProduct: string) => {
 const itemsProducts = ref<productOrder[]>([])
 
 const fetchProducts = (searchProduct: string) => {
-  // if (searchProduct.length <= 1) return
+  if (searchProduct.length <= 1) return
   
   axiosIns.get(`${baseUrl}/product/code`,{ params: { g: searchProduct }}).then(res => {
     const response = res.data;
-    if (response.status === 1) {
-      itemsProducts.value = response.data
-    }
+    console.log(response);
+    
+    itemsProducts.value = response.data
   })
 }
 
@@ -72,8 +83,9 @@ function fetchOrder() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -174,6 +186,9 @@ function deleteItem(index: any) {
   form.value.products.splice(index, 1)
 }
 
+const handleTabPress = (searchProduct: string) => {
+  console.log('state', searchProduct);
+}
 </script>
 
 <template>
@@ -197,7 +212,22 @@ function deleteItem(index: any) {
                     hide-details="auto"
                     variant="outlined"
                     color="primary"
-                  ></v-autocomplete>
+                  ></v-autocomplete>  
+                  State {{ state.search }}
+                  <v-autocomplete
+                  v-model="form.searchProduct"
+                  :items="itemsProducts"
+                  @keydown.tab.prevent="handleTabPress"
+                  item-title="name"
+                  item-value="_id"
+                  label="Produto"
+                  class="mt-4 mb-8"
+                  density="comfortable"
+                  hide-details="auto"
+                  variant="outlined"
+                  color="primary"
+                ></v-autocomplete>
+                <!-- {{ form.searchProduct }}
                   <v-autocomplete
                     v-model="form.searchProduct"
                     @update:search="getProducts"
@@ -220,7 +250,7 @@ function deleteItem(index: any) {
                       >                                        
                     </v-list-item>
                   </template>
-                </v-autocomplete>
+                </v-autocomplete> -->
                   <v-data-table
                       :headers="productsTable.headers"
                       :items="form.products"

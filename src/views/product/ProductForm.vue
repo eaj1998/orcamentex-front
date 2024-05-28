@@ -31,8 +31,9 @@ async function fetchProduct() {
         console.log(err);
         
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -83,8 +84,9 @@ async function saveProduct() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -106,8 +108,9 @@ async function saveProduct() {
       })
       .catch((err) => {
         const response = err.response.data
-        if(response.message){
-          pushSnackbar({ isVisible: true, type: 'error', message: err.msg })
+        if(response.message && !response.data){
+          pushSnackbar({ isVisible: true, type: 'error', message: response.message })
+          return
         }
         if(response.data) {
           response.data.map((erro: any) => {
@@ -145,6 +148,7 @@ function maskMoney() {
                     <v-text-field 
                     v-model="form.price"
                     required
+                    label="Valor"
                     density="comfortable"
                     hide-details="auto"
                     variant="outlined"
