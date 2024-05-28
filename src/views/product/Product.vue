@@ -9,7 +9,6 @@ import type { SnackbarItem } from '@/types/structure';
 import { router } from '@/router';
 import { Utils } from "@/utils/Util";
 import { useRoute } from 'vue-router';
-import download from 'downloadjs';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
@@ -26,12 +25,7 @@ const pushSnackbar = (item: SnackbarItem) => {
 }
 
 
-onMounted(async () => {
-  
-  if(route.params.downloadTabela){
-    downloadPdf()
-    router.push({ path: `/product` });
-  }
+onMounted(async () => {  
   await fetchProducts()
 })
 
