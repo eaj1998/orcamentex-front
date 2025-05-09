@@ -68,6 +68,7 @@ function fetchOrder() {
       form.value.title = response.data.title
       form.value.customer = response.data.customer
       form.value.products = response.data.products
+      form.value.expirationDate = response.data.expirationDate ? new Date(response.data.expirationDate).toISOString().substr(0, 10) : null
     })
     .catch((err) => {
       const response = err.response.data
@@ -97,7 +98,8 @@ const form = ref({
   title: '',
   customer: '',
   products: ref<productOrder[]>([]),
-  searchProduct: ''
+  searchProduct: '',
+  expirationDate: null
 })
 
 
@@ -179,6 +181,19 @@ const handleSearchProduct = () => {
               <v-autocomplete v-model="form.customer" @update:search="getCustomer" label="Cliente" :items="items"
                 item-title="name" item-value="_id" class="mt-4 mb-8" required density="comfortable" hide-details="auto"
                 variant="outlined" color="primary"></v-autocomplete>
+              <v-row>
+                <v-col cols="10">
+                  <v-text-field v-model="form.title" label="Título" density="comfortable"
+                  hide-details="auto" variant="outlined" color="primary"></v-text-field>
+                </v-col>
+                <v-col cols="2">
+                  <v-text-field v-model="form.expirationDate" label="Data de Expiração"
+                  type="date" hide-details="auto" density="comfortable" variant="outlined" color="primary"
+                  ></v-text-field>
+                </v-col>                
+              </v-row>
+              
+              
               <v-row>
                 <v-col cols="10">
                   <v-text-field v-model="form.searchProduct" label="Produto" class="mt-4 mb-8" density="comfortable"
