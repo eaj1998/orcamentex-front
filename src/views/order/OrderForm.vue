@@ -68,7 +68,7 @@ function fetchOrder() {
       form.value.title = response.data.title
       form.value.customer = response.data.customer
       form.value.products = response.data.products
-      form.value.expirationDate = response.data.expirationDate ? new Date(response.data.expirationDate).toISOString().substr(0, 10) : null
+      form.value.expirationDate = response.data.expirationDate
     })
     .catch((err) => {
       const response = err.response.data
